@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>TripEncrypt Passport</title>
-    <link rel="icon" type="images/x-icon" href="/images/Logos/TEIconPNG.png">
+    <link rel="icon" type="images/x-icon" href="/logos/TEIconPNG.png">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <style>
         #container {
@@ -154,7 +154,7 @@
 <body>
     <div id="container">
 
-        <img src="images/Back/700px-Passport_Pages.png" alt="Background Image" id="image">
+        <img src="images/700px-Passport_Pages.png" alt="Background Image" id="image">
 
         <div id="map-container">
             <div id="map"></div>
@@ -162,21 +162,21 @@
 
         <div id="list-container">
             <div class="list-item">
-                <img src="images/Markers/MonuStamp.png" alt="Image 1" class="item-image">
+                <img src="markers/MonuStamp.png" alt="Image 1" class="item-image">
                 <div class="item-content">
                     <div class="item-title">Example Stamp 1</div>
                     <div class="subitem">Subitem 1.1</div>
                 </div>
             </div>
             <div class="list-item">
-                <img src="images/Markers/MonuStamp.png" alt="Image 2" class="item-image">
+                <img src="markers/MonuStamp.png" alt="Image 2" class="item-image">
                 <div class="item-content">
                     <div class="item-title">Example Stamp 2</div>
                     <div class="subitem">Subitem 2.1</div>
                 </div>
             </div>
             <div class="list-item">
-                <img src="images/Markers/MonuStamp.png" alt="Image 2" class="item-image">
+                <img src="markers/MonuStamp.png" alt="Image 2" class="item-image">
                 <div class="item-content">
                     <div class="item-title">Example Stamp 3</div>
                     <div class="subitem">Subitem 3.1</div>
@@ -185,7 +185,7 @@
         </div>
 
         <div id="logo-container">
-            <a href="index.html"><img src="images/Logos/TEIconPNG.png" alt="Logo" id="logo-image"></a>
+            <a href="index.html"><img src="logos/TEIconPNG.png" alt="Logo" id="logo-image"></a>
         </div>
     </div>
 
@@ -231,7 +231,7 @@
             var marker = L.marker([restaurant.lat, restaurant.lng], {
                 icon: L.divIcon({
                     className: 'custom-marker-icon',
-                    html: '<img src="images/Markers/TEPinPNG.png" width="50" height="51" alt="' + restaurant.name + '">',
+                    html: '<img src="markers/TEPinPNG.png" width="50" height="51" alt="' + restaurant.name + '">',
                     iconAnchor: [25, 47]
                 })
             }).addTo(map);
@@ -241,7 +241,7 @@
         // Custom Marker for user location
         var userMarkerIcon = L.divIcon({
             className: 'custom-person-icon',
-            html: '<img src="images/Markers/ManWTEB.png" width="50" height="50" alt="Your Location">',
+            html: '<img src="markers/ManWTEB.png" width="50" height="50" alt="Your Location">',
             iconAnchor: [25, 47]
         });
 
@@ -274,8 +274,8 @@
 
         function updateLayout() {
             var passportImage = document.getElementById('image');
-            var mobileImagePath = 'images/Back/700px-Passport_Pages.png';
-            var desktopImagePath = 'images/Back/700px-Passport_Pages.png';
+            var mobileImagePath = 'images/700px-Passport_Pages.png';
+            var desktopImagePath = 'images/700px-Passport_Pages.png';
             var container = document.getElementById('container');
 
             var mapWindow = document.getElementById('map-container');
