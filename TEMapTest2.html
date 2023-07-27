@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TripEncrypt Passport</title>
+    <link rel="icon" type="images/x-icon" href="/images/Logos/TEIconPNG.png">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        #container {
+            display: flex;
+            width: 100%;
+            height: 95vh;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        #map-container {
+            position: absolute;
+            right: 18%;
+            width: 30%; 
+            height: 45vw; 
+            z-index: 1;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+            opacity: 0.75;
+        }
+
+        .custom-marker-icon {
+            opacity: 1; 
+        }
+
+        .custom-person-icon {
+            opacity: 1; 
+        }
+
+        /* PASSPORT IMAGE ######################################################### */
+        #image {
+            width: 70%;
+            height: auto;
+            object-fit: cover;
+            position: absolute;
+            z-index: 0;
+        }
+
+        /* STAMP LIST ###################################################################*/
+        #list-container {
+            position: absolute;
+            left: 18%;
+            width: 30%; 
+            height: 45vw; 
+            display: flex;
+            flex-direction: column; 
+            z-index: 2; 
+            background-color: rgba(255, 255, 255, 0.5); 
+        }
+
+        .list-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        /* Style for the item image */
+        .item-image {
+            width: 60px;
+            height: 60px;
+            margin-right: 10px;
+            padding-left: 10px;
+            padding-top: 10px;
+        }
+
+        .item-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .item-title {
+            font-weight: bold;
+        }
+
+        .subitem {
+            color: #777;
+        }
+
+        /* LOGO #################################################### */
+        #logo-container {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 3;
+        }
+
+        #logo-image {
+            width: 100px;
+            height: auto;
+        }
+
+        /* MEDIA QUERY #############################################*/
+        @media screen and (max-width: 768px) {
+            /*#container {
+                flex-direction: column;
+                align-items: center;
+            }*/
+
+            /* Set the map container to be at the upper center */
+            #map-container {
+                position: relative;
+                bottom: 2.5%; 
+                left: 0%; 
+                
+                /*width: 80%;*/ 
+                width: 400px;
+                height: 38vh; 
+                
+                z-index: 1;
+            }
+
+            /* Set the list container to be at the lower center */
+            #list-container {
+                position: relative;
+                top: 2.5%;
+                left: 0%;
+                display: block;
+                justify-content: center;
+                
+                width: 400px; 
+                height: 38vh; 
+                z-index: 2;
+                display: flex;
+            }
+        }
+
+        @media screen and (max-width: 420px) {
+            #container {
+                
+                width: 100%;
+                height: 95vh;
+            }
+        }
+
+        /* FOOTER ####################################################*/
+        .copyright {
+            font-size: 12px;
+            color: #888;
+            text-align: center;
+            padding: 10px;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="container">
+
+        <img src="images/Back/700px-Passport_Pages.png" alt="Background Image" id="image">
+
+        <div id="map-container">
+            <div id="map"></div>
+        </div>
+
+        <div id="list-container">
+            <div class="list-item">
+                <img src="images/Markers/MonuStamp.png" alt="Image 1" class="item-image">
+                <div class="item-content">
+                    <div class="item-title">Example Stamp 1</div>
+                    <div class="subitem">Subitem 1.1</div>
+                </div>
+            </div>
+            <div class="list-item">
+                <img src="images/Markers/MonuStamp.png" alt="Image 2" class="item-image">
+                <div class="item-content">
+                    <div class="item-title">Example Stamp 2</div>
+                    <div class="subitem">Subitem 2.1</div>
+                </div>
+            </div>
+            <div class="list-item">
+                <img src="images/Markers/MonuStamp.png" alt="Image 2" class="item-image">
+                <div class="item-content">
+                    <div class="item-title">Example Stamp 3</div>
+                    <div class="subitem">Subitem 3.1</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="logo-container">
+            <a href="index.html"><img src="images/Logos/TEIconPNG.png" alt="Logo" id="logo-image"></a>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('map');
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Get user's current location
+        map.locate({ setView: true, maxZoom: 16 });
+
+        // Dummy nearby restaurant data (latitude, longitude, name)
+        var restaurants = [
+            { lat: 44.04608, lng: -123.07762, name: "Lillis Complex", radius: 10}, //radius in meters
+            { lat: 44.04428, lng: -123.07701, name: "Museum", radius: 10},
+            { lat: 45.46988, lng: -122.64097, name: "Westmoreland Park Pond", radius: 10},
+            { lat: 45.47236, lng: -122.64189, name: "Westmoreland Park Bridge", radius: 10 },
+            { lat: 45.47406, lng: -122.63608, name: "Eastmoreland Garden", radius: 10 },
+            { lat: 45.47776, lng: -122.64229, name: "23rd", radius: 10 },
+            // #
+        ];
+
+        // Function to check user's proximity to restaurants and trigger ping if within radius
+        function checkProximityToRestaurants(userLatLng) {
+            restaurants.forEach(function (restaurant) {
+                var restaurantLatLng = L.latLng(restaurant.lat, restaurant.lng);
+                var distanceToRestaurant = userLatLng.distanceTo(restaurantLatLng); // In meters
+
+                if (distanceToRestaurant <= restaurant.radius) {
+                    // User is within the radius of the restaurant
+                    // Trigger the ping or notification for the restaurant
+                    var popupContent = "You're near the " + restaurant.name + " Landmark";
+                    L.popup().setLatLng(userLatLng).setContent(popupContent).openOn(map);
+                }
+            });
+        }
+
+        // Custom Markers
+        restaurants.forEach(function (restaurant) {
+            var marker = L.marker([restaurant.lat, restaurant.lng], {
+                icon: L.divIcon({
+                    className: 'custom-marker-icon',
+                    html: '<img src="images/Markers/TEPinPNG.png" width="50" height="51" alt="' + restaurant.name + '">',
+                    iconAnchor: [25, 47]
+                })
+            }).addTo(map);
+            marker.bindPopup(restaurant.name);
+        });
+
+        // Custom Marker for user location
+        var userMarkerIcon = L.divIcon({
+            className: 'custom-person-icon',
+            html: '<img src="images/Markers/ManWTEB.png" width="50" height="50" alt="Your Location">',
+            iconAnchor: [25, 47]
+        });
+
+        // Event triggered when the user's location is found
+        function onLocationFound(e) {
+            var userLatLng = e.latlng;
+
+            var radius = e.accuracy / 2;
+            var userMarker = L.marker(e.latlng,{ icon: userMarkerIcon }).addTo(map);
+            userMarker.bindPopup("You are here!").openPopup();
+
+            var userCoordinates = "Latitude: " + e.latlng.lat + "<br>Longitude: " + e.latlng.lng;
+            L.popup()
+                .setLatLng(e.latlng)
+                .setContent(userCoordinates)
+                .openOn(map);
+
+            checkProximityToRestaurants(userLatLng);
+        }
+
+        // Event triggered if the user's location is not found
+        function onLocationError(e) {
+            alert(e.message);
+        }
+
+        map.on('locationfound', onLocationFound);
+        map.on('locationerror', onLocationError);
+
+        // PASSPORT RESPONSIVENESS ###########################################################
+
+        function updateLayout() {
+            var passportImage = document.getElementById('image');
+            var mobileImagePath = 'images/Back/700px-Passport_Pages.png';
+            var desktopImagePath = 'images/Back/700px-Passport_Pages.png';
+            var container = document.getElementById('container');
+
+            var mapWindow = document.getElementById('map-container');
+
+            if (window.innerWidth <= 768) { // Set the breakpoint for mobile screens
+                passportImage.src = mobileImagePath;
+                passportImage.style.width = 'auto'; // Adjust the width and height for mobile view
+                passportImage.style.height = '70%';
+                passportImage.style.objectFit = 'cover';
+                passportImage.style.position = 'absolute';
+                passportImage.style.top = '50%';
+                passportImage.style.left = '50%';
+                passportImage.style.transform = 'translate(-50%, -50%) rotate(90deg)'; 
+                container.style.flexDirection = 'column'; 
+
+            } else {
+                passportImage.src = desktopImagePath;
+                passportImage.style.width = '70%'; // Reset styles for desktop view
+                passportImage.style.height = 'auto';
+                passportImage.style.objectFit = 'cover';
+                passportImage.style.position = 'absolute';
+                passportImage.style.top = '50%';
+                passportImage.style.left = '50%';
+                passportImage.style.transform = 'translate(-50%, -50%) rotate(0deg)'; 
+                container.style.flexDirection = 'row'; 
+            }
+        }
+
+        // Call the function when the page loads and on window resize
+        window.addEventListener('load', updateLayout);
+        window.addEventListener('resize', updateLayout);
+    </script>
+
+    <footer>
+        <div class="copyright">
+            &copy; 2023 TripEncrypt Inc. All rights reserved.
+        </div>
+    </footer>
+</body>
+</html>
+
+
